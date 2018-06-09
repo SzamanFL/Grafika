@@ -15,16 +15,20 @@ GLuint programColor;
 GLuint programTexture;
 glm::vec3 tabl[10];
 glm::vec3 tabl1[50];
+glm::vec3 tabl2[10];
+int tabb[500];
 Core::Shader_Loader shaderLoader;
 
 obj::Model shipModel;
+obj::Model sharkModel;
 obj::Model sphereModel;
 obj::Model groundModel;
+obj::Model seaweedModel;
 
 glm::vec3 cameraPos = glm::vec3(0, 0, 5);
 glm::vec3 cameraDir; // Wektor "do przodu" kamery
 glm::vec3 cameraSide; // Wektor "w bok" kamery
-glm::vec3 cameraVer; // Wektor "w góre" kamery
+glm::vec3 cameraVer; // Wektor "w gÃ³re" kamery
 float cameraAngle = 0;
 float cameraAngle1 = 0;
 
@@ -37,8 +41,7 @@ glm::quat rotation = glm::quat(1, 0, 0, 0);
 
 GLuint textureAsteroid;
 GLuint textureGround;
-
-int tabb[500];
+GLuint textureSeaweed;
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -121,25 +124,33 @@ void renderScene()
 
 	glm::mat4 shipInitialTransformation = glm::translate(glm::vec3(0,-0.25f,0)) * glm::rotate(glm::radians(180.0f), glm::vec3(0,1,0)) * glm::scale(glm::vec3(0.25f));
 	glm::mat4 shipModelMatrix = glm::translate(cameraPos  +cameraDir * 0.5f) * glm::rotate(-cameraAngle, glm::vec3(0,1,0)) * shipInitialTransformation;
+	
 	drawObjectColor(&shipModel, shipModelMatrix, glm::vec3(0.6f));
-	//drawObjectTexture(&groundModel, glm::translate(glm::vec3(-20, 0, 0)), textureGround);
+	drawObjectColor(&groundModel, glm::translate(glm::vec3(0, -40, 0)), glm::vec3(0.2f, 0.05f, 0.2f));
 
 	//drawObjectTexture(&sphereModel, glm::translate(glm::vec3(0,0,0)), textureAsteroid);
 	for (int i = 0; i < 10; i++)
 	{
 		drawObjectTexture(&sphereModel, glm::translate(tabl[i]), textureAsteroid);
+		//drawObjectColor(&sharkModel, glm::translate(tabl[i]), glm::vec3(0.2f, 1.0f, 0.2f));
 		//drawObjectTexture(&groundModel, glm::translate(tabl1[i]), textureGround);
 	}
-	for (int i = 1; i < 500; i++)
+	for (int j = 0; j < 5; j++)
 	{
-		//zmienic tutaj na wodorosty
-		drawObjectTexture(&sphereModel, glm::translate(glm::vec3(tabb[i], -20, tabb[i-1] )), textureAsteroid);
+		drawObjectColor(&sharkModel, glm::translate(tabl2[j]), glm::vec3(0.2f, 0.20f, 0.2f));
 	}
-	//poruszajace sie
-	float timee = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+	for (int s = 1; s < 500; s++)
+		 {
+				//zmienic tutaj na wodorosty
+			drawObjectColor(&seaweedModel, glm::translate(glm::vec3(tabb[s], -20, tabb[s - 1])), glm::vec3(0.2f,1.0f,0.2f));
+			//drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[i], -20, tabb[i - 1])), textureSeaweed);
+		}
+		//poruszajace sie
+		float timee = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 	int czas = -40 + timee * 2;
 	if (-40 + timee * 2 <= 0) {
 		czas = 10000;
+		
 	}
 	drawObjectTexture(&sphereModel, glm::translate(glm::vec3(0, 0, czas)), textureAsteroid);
 	drawObjectTexture(&sphereModel, glm::translate(glm::vec3(2, 0, -42 + timee * 2)), textureAsteroid);
@@ -158,22 +169,27 @@ void init()
 	{
 		tabl[i] = glm::ballRand(20.0f);
 	}
-	for (int i = 0; i < 50; i++)
+	for (int j = 0; j < 10; j++)
 	{
-		tabl1[i] = glm::ballRand(20.0f);
+		tabl1[j] = glm::ballRand(20.0f);
 	}
-	for (int i = 0; i < 500; i++)
+	for (int s = 0; s < 5; s++)
 	{
-		tabb[i] = rand() % 1000 + 1;
+		tabl2[s] = glm::ballRand(60.0f);
 	}
 	programColor = shaderLoader.CreateProgram("shaders/shader_color.vert", "shaders/shader_color.frag");
 	programTexture = shaderLoader.CreateProgram("shaders/shader_tex.vert", "shaders/shader_tex.frag");
 
-	//groundModel = obj::loadModelFromFile("models/Rockwall.obj");
-	//textureGround = Core::LoadTexture("textures/droptomaterial,color,bump,displacement.jpg");
+	groundModel = obj::loadModelFromFile("models/Rockwall.obj");
+	textureGround = Core::LoadTexture("textures/droptomaterial,color,bump,displacement.jpg");
+
+	seaweedModel = obj::loadModelFromFile("models/Seaweed.obj");
+	textureSeaweed = Core::LoadTexture("textures/seaweed.png");
+
+	shipModel = obj::loadModelFromFile("models/spaceship.obj");
+	sharkModel = obj::loadModelFromFile("models/GreatWhite.obj");
 
 	sphereModel = obj::loadModelFromFile("models/fish.obj");
-	shipModel = obj::loadModelFromFile("models/spaceship.obj");
 	textureAsteroid = Core::LoadTexture("textures/fish_texture.png");
 }
 
