@@ -25,7 +25,7 @@ int counter1;
 int cont1;
 int acont1;
 glm::vec3 sharkcoor;
-int tabb[3000];
+int tabb[300];
 float timee[9];
 Core::Shader_Loader shaderLoader;
 
@@ -53,6 +53,7 @@ glm::quat rotation = glm::quat(1, 0, 0, 0);
 GLuint textureAsteroid;
 GLuint textureGround;
 GLuint textureSeaweed;
+GLuint textureShark;
 float timeq;
 float timefish;
 float timeshark;
@@ -65,10 +66,13 @@ void keyboard(unsigned char key, int x, int y)
 	float moveSpeed = 0.7f;
 	switch(key)
 	{
+		//na boki
 	case 'z': cameraAngle -= angleSpeed; break;
 	case 'x': cameraAngle += angleSpeed; break;
+		//góra dół
 	case 'q': cameraPos -= cameraVer * moveSpeed; break;
 	case 'e': cameraPos += cameraVer * moveSpeed; break;
+	// lewo prawo
 	case 'w': cameraPos += cameraDir * moveSpeed; break;
 	case 's': cameraPos -= cameraDir * moveSpeed; break;
 	case 'd': cameraPos += cameraSide * moveSpeed; break;
@@ -155,7 +159,7 @@ void renderScene()
 	perspectiveMatrix = Core::createPerspectiveMatrix();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.501f, 0.501f, 0.501f, 1.0f);
+	glClearColor(0.2021f, 0.20f, 0.0128f, 1.0f);
 
 	//glm::mat4 shipRotation = glm::mat4_cast(glm::inverse(rotation));
 
@@ -168,7 +172,7 @@ void renderScene()
 		timefish = (glutGet(GLUT_ELAPSED_TIME) / 1000.0f - 4) - glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 	else
 		timefish = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
-	drawObjectTexture(&sharkModel, shipModelMatrix, textureAsteroid);
+	drawObjectTexture(&sharkModel, shipModelMatrix, textureShark);
 	drawObjectTexture(&groundModel, glm::translate(glm::vec3(0, -100, 0)), textureGround);
 	//pierwsza partia ryb
 	for (int i = 0; i < 100; i++)
@@ -214,7 +218,6 @@ void renderScene()
 			cont = 0;
 		}
 		drawObjectTexture(&fishModel, glm::translate(tabl[i]) * glm::rotate(glm::radians(180.0f), glm::vec3(0, 1, 0)), textureAsteroid);
-		//drawObjectTexture(&fishModel, glm::translate(glm::vec3(tabl[i].x,tabl[i].z,tabl[i].y * sinf(timeq))), textureAsteroid);
 	}
 	counter++;
 	cont++;
@@ -223,7 +226,7 @@ void renderScene()
 	//druga partia ryb
 	for (int i = 0; i < 100; i++)
 	{
-		fishtab[i].x = fishtab[i].x + (timefish*0.01f);
+		fishtab[i].x = fishtab[i].x + (timefish*0.005f);
 		if (counter1 < 20)
 		{
 			fishtab[i].y = fishtab[i].y - (sinf(timefish * 0.001f));
@@ -245,7 +248,7 @@ void renderScene()
 	}
 	for (int i = 100; i < 200; i++)
 	{
-		fishtab[i].x = fishtab[i].x - (timefish*0.01f);
+		fishtab[i].x = fishtab[i].x - (timefish*0.005f);
 		if (counter1 < 20)
 		{
 			fishtab[i].y = fishtab[i].y + (sinf(timefish * 0.001f));
@@ -281,32 +284,34 @@ void renderScene()
 				glm::rotate(glm::radians(timeshark * 360.0f), glm::vec3(0, 1, 0)) *
 				glm::translate(sharkLoc) *
 				glm::rotate(glm::radians(270.f), glm::vec3(0, 1, 0)),
-				textureAsteroid);
+				textureShark);
 		else
 			drawObjectTexture(&sharkModel, 
 				glm::translate(glm::vec3(tabl2[j])) * 
 				glm::rotate(glm::radians(timeshark * 360.0f), glm::vec3(0, 1, 0)) * 
 				glm::translate(sharkLoc) *
 				glm::rotate(glm::radians(90.f), glm::vec3(0, 1, 0)),
-				textureAsteroid);
+				textureShark);
 		sharkLoc = glm::vec3(0, 0, 0 );
 		
 	}
 	//sekcja wodorostow
-	for (int s = 1; s < 1000; s++)
+	for (int s = 1; s < 150; s++)
 	{
 				//zmienic tutaj na wodorosty
-		drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[s] * pow(-1,s), -70, tabb[s - 1] * pow(-1, s))), textureSeaweed);
+		drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[s] * pow(-1,s), -100, tabb[s - 1] * pow(-1, s))), textureSeaweed);
 	}
-	for (int e = 1000; e < 2000; e++)
+	
+	for (int e = 150; e < 225; e++)
 	{
 		//zmienic tutaj na wodorosty
-		drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[e-1], -70, tabb[e] * pow(-1, e))), textureSeaweed);
+		drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[e-1], -100, tabb[e] * pow(-1, e))), textureSeaweed);
+
 	}
-	for (int e = 2000; e < 3000; e++)
+	for (int e = 225; e < 300; e++)
 	{
 		//zmienic tutaj na wodorosty
-		drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[e - 1] * pow(-1, e), -70, tabb[e] )), textureSeaweed);
+		drawObjectTexture(&seaweedModel, glm::translate(glm::vec3(tabb[e - 1] * pow(-1, e), -100, tabb[e] )), textureSeaweed);
 	}
 		//poruszajace sie
 
@@ -314,10 +319,10 @@ void renderScene()
 	//sekcja pościgu rekina za rybami
 	for (int w = 0; w < 9; w++)
 	{
-	if (timee[w] < 1000)
-		timee[w] = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
-	else
-		coord[w] = glm::vec3(0, -80, 0);
+		if (timee[w] < 1000)
+			timee[w] = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+		else
+			coord[w] = glm::vec3(0, -80, 0);
 	}
 
 	
@@ -343,11 +348,11 @@ void renderScene()
 	drawObjectTexture(&fishModel, glm::translate(coord[6]), textureAsteroid);
 	drawObjectTexture(&fishModel, glm::translate(coord[7]), textureAsteroid);
 	drawObjectTexture(&fishModel, glm::translate(coord[8]), textureAsteroid);
-	drawObjectTexture(&sharkModel, glm::translate(sharkcoor),textureAsteroid);
+	drawObjectTexture(&sharkModel, glm::translate(sharkcoor),textureShark);
 
 	for (int t = 0; t < 9; t++)
 	{
-	if (abs(sharkcoor.x - coord[t].x)  < 2 && abs(sharkcoor.y - coord[t].y) < 4 && abs(sharkcoor.z - coord[t].z)  < 1)
+	if (abs(sharkcoor.x - coord[t].x)  < 2 && abs(sharkcoor.y - coord[t].y) < 4 && abs(sharkcoor.z - coord[t].z)  < 0.4)
 		timee[t] = 10000;
 	}
 	
@@ -383,9 +388,9 @@ void init()
 		tabl2[s] = glm::ballRand(80.0f);
 	}
 	//Wodorosty
-	for (int q = 0; q < 3000; q++)
+	for (int q = 0; q < 300; q++)
 	{
-		tabb[q] = rand() % 500 + 1;
+		tabb[q] = rand() % 100 + 1;
 	}
 	//Czas ryb
 	for (int q = 0; q < 9; q++)
@@ -396,13 +401,14 @@ void init()
 	programTexture = shaderLoader.CreateProgram("shaders/shader_tex.vert", "shaders/shader_tex.frag");
 
 	groundModel = obj::loadModelFromFile("models/Rockwall.obj");
-	textureGround = Core::LoadTexture("textures/asteroid.png");
+	textureGround = Core::LoadTexture("textures/ground.png");
 
-	seaweedModel = obj::loadModelFromFile("models/Seaweed.obj");
-	textureSeaweed = Core::LoadTexture("textures/seaweed.png");
+	seaweedModel = obj::loadModelFromFile("models/Grass.obj");
+	textureSeaweed = Core::LoadTexture("textures/Grass.png");
 
 	shipModel = obj::loadModelFromFile("models/spaceship.obj");
 	sharkModel = obj::loadModelFromFile("models/GreatWhite.obj");
+	textureShark = Core::LoadTexture("textures/shark.png");
 
 	fishModel = obj::loadModelFromFile("models/fish.obj");
 	textureAsteroid = Core::LoadTexture("textures/fish_texture.png");
